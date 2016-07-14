@@ -1,0 +1,146 @@
+<head>
+    <title>Leaderboard</title>
+</head>
+<body style='height:100%;'>
+    <p> {{> loginButtons align="left"}} </p>
+    <div style='width=100%; height:100%;'>
+	<div style='width:49%; display:inline-block; text-align:center; '>
+	    <h1>Leaderboard</h1>
+    	    	{{> leaderboard}}
+	</div>
+	<div style='display:inline-block; position:absolute; height:80%; border-left:1px black solid; '></div>
+	<div style='float:right; width:49%; text-align:center; '>
+	    <h1>Notifs</h1>
+	    <div> {{> createNotifs}} </div>
+	    <div style='width=100%'>
+	        <div style='width:50%; display:inline-block; text-align:center; '> {{> deleteNotifs}} </div>
+		<div style='float:right; width:50%; text-align:center; '> {{> informNotifs}} </div>
+	    </div>
+	</div>
+    </div>
+    <embed src="beep.wav" autostart="false" width="0" height="0" id="sound1" enablejavascript="true">
+</body>
+
+<template name="informNotifs">
+    {{#if getUnseenNotifs}}
+         <h4> Notifs...</h4>
+	 <table>
+	    <tr><th>Event</th><th>Status</th></tr>
+	    {{#each getUnseenNotifs}}
+		<tr>
+		    <td>{{player_name}} has crossed the score of {{thresh_score}}</td>
+		    <td>
+			<form>
+			     <input type='hidden' value={{_id}} name='notif_id'>
+			     <input type='submit' value='Seen'>
+			</form>
+		    </td>
+		</tr>
+	    {{/each}}
+	 </table>
+    {{/if}}
+</template>
+
+<template name="createNotifs">
+    {{#if currentUser}}
+        <div>
+            <h4>Create Form</h4>
+            <form>
+	        Name:<select name="player_name">
+	            {{#each player}}
+            	        <option value="{{_id}}.{{name}} ">{{name}}</option>
+                    {{/each}}
+	            </select> <br/>
+	            Score Threshold: <input type='text' name='score_thres'>
+                    <input type="submit" value="Add Notif">
+             </form>
+        </div>
+    {{else}}
+	<p>You must be logged-in to see this content.</p>
+    {{/if}}
+</template>
+
+<template name="deleteNotifs">
+    <div>
+	{{#if getUserNotifs}}
+	    <h4>Pending Notifs</h4>
+	    <table>
+	        <tr><th>Player</th><th>Thresh</th><th>Time</th></tr>
+	        {{#each getUserNotifs}}
+	            <tr value={{_id}} class="notif {{selectedNotif}}">
+	    	        <td>{{player_name}}</td>
+			<td>{{thresh_score}}</td>
+			<td>{{date}}</td>
+			<td>
+			    <form>
+				<input type="hidden" value={{_id}} name="notif_id">
+				<input type="submit" value="Delete Notif">
+			    </form>
+			</td>
+	            </tr>
+	        {{/each}}
+	    </table>
+	{{/if}}
+    </div>
+</template>
+
+
+<template name="leaderboard">
+    {{#if currentUser}}
+        <h4> Total Players: {{playerCount}}</h4>
+        <ul style="list-style: none;">
+        {{#each player}}  
+	    <li class="player {{selectedClass}} ">{{name}} : {{score}} </li>
+        {{/each}}
+        {{#if selectedPlayerDetails}}
+	<h5> Selected Player: {{selectedPlayerDetails}}</h5>
+            <li> 
+	        <button class="increment">Give 5 Points</button> 
+                <button class="decrement">Take 5 Points</button> 
+            </li>
+        {{/if}}
+        </ul>
+    {{else}}
+	<p>You must be logged-in to see this content.</p>
+    {{/if}}
+    <br/><br/>
+    {{#if isAdmin}}
+	<div style='position:absolute; width:30%; left:10%; border:1px black dotted;'></div>
+        <h5> Add/Delete User (admin access only) </h5>
+	<div style='width:100%;'>
+	    <div style='display:inline-block; width:50%; text-align:center'>
+		{{> addUser}}
+	    </div>
+	    <div style='width:50%; float:right; text-align:center'>
+		{{> deleteUser}}
+	    </div>
+	</div>
+    {{/if}}
+</template>
+
+<template name="addUser">
+	<h5>Add User</h5> 
+	<form>
+	    Name: <input type="text" name="name"> <br/>
+	    <input type="submit" value="Add User" id="adduser">
+	</form>
+</template>
+
+<template name="deleteUser">	
+	<h5>Delete User</h5>
+	<table>
+	<tr><th>Name</th><th>Created</th><th>Delete</th></tr>
+	{{#each users}}
+	    <tr>
+		<td>{{name}}</td>
+		<td>{{date}}</td>
+		<td>
+		    <form>
+			<input type="hidden" name="user_id" value={{_id}}>
+			<input type="submit" value="Delete">
+		    </form>
+		</td>
+	    </tr>
+	{{/each}}
+	</table>
+</template>
