@@ -34,56 +34,60 @@
         <h3>
 <a id="welcome-to-my-socialcops-submmission" class="anchor" href="#welcome-to-my-socialcops-submmission" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Welcome to my SocialCops Submmission.</h3>
 
-<p>As requested, find here an HTTP client that allows users to subscribe to updates made in a mongo database and be notified in real time.
-A system-admin can add players and other system-users can update(add/subtract) the scores of these players.
-Every system-user can create their own notifs on competitor scores and be notified promptly in their dashboard when a change occurs.</p>
+<p>As requested, find here an HTTP client that allows users to subscribe to updates made in a mongo database and be notified in real time.</p>
 
-<h3>
-<a id="installation-instructions" class="anchor" href="#installation-instructions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation Instructions</h3>
+<p>A system-admin can add players and other system-users can update(add/subtract) the scores of these players.</p>
 
+<p>Every system-user can create their own notifs on competitor scores and be notified promptly in their dashboard when a change occurs.</p>
+
+<h2>
+<a id="installation-instructions" class="anchor" href="#installation-instructions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation Instructions</h2>
+
+<blockquote>
 <ol>
-<li>Install <code>Meteor</code> on your machine : <code>curl https://install.meteor.com/ | sh</code>
-</li>
-<li>Clone this repo: <code>git clone git@github.com:prerakmody/meteor_sample.git</code>
-</li>
-<li>Add a user-access control package: <code>meteor add accounts-password</code>
-</li>
-<li>Add: <code>meteor add check</code>
-</li>
-<li>Add: <code>meteor remove insecure</code>
-</li>
+<li>
+<code>curl https://install.meteor.com/ | sh</code> </li>
+<li><code>meteor create leaderboard</code></li>
+<li><code>cd leaderboard</code></li>
+<li><code>rm -rf !(.meteor)</code></li>
+<li><code>git init</code></li>
+<li><code>git remote add origin git@github.com:prerakmody/meteor_sample.git</code></li>
+<li><code>git pull origin master</code></li>
+<li><code>sh meteor_packages.sh</code></li>
+<li><code>meteor run --port 3000</code></li>
 </ol>
+</blockquote>
 
-<h3>
-<a id="usage-instructions" class="anchor" href="#usage-instructions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage Instructions</h3>
+<h2>
+<a id="usage-instructions" class="anchor" href="#usage-instructions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage Instructions</h2>
 
 <ol>
 <li>One can play in this app with the scores of the players as well as create custom notifs for their scores.</li>
 <li>The app is on domain:3000 (Eg: localhost:3000)</li>
-<li>Login with User: '<a href="mailto:admin@gmail.com">admin@gmail.com</a>' and Pass:'admin' </li>
+<li>Login with a default account - User: '<a href="mailto:admin@gmail.com">admin@gmail.com</a>' and Pass:'admin' </li>
 </ol>
 
-<h2>
-<a id="playing-with-scores" class="anchor" href="#playing-with-scores" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Playing with Scores</h2>
+<h3>
+<a id="playing-with-leaderboard-scores" class="anchor" href="#playing-with-leaderboard-scores" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Playing with Leaderboard Scores</h3>
 
 <ol>
 <li>This is the section on the left hand side of the page</li>
 <li>To increment/decrement the score of the players click on them. Buttons to increment/decrement their scores shall appear.</li>
 </ol>
 
-<h2>
-<a id="playing-with-notifs" class="anchor" href="#playing-with-notifs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Playing with Notifs</h2>
+<h3>
+<a id="playing-with-notifs" class="anchor" href="#playing-with-notifs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Playing with Notifs</h3>
 
 <ol>
 <li>This is the section on the right hand side of the page</li>
-<li>Select a playerfrom the drop down list and add a score threshold.</li>
-<li>Hit Submit.</li>
+<li>Select a player from the drop down list and add a score threshold.</li>
+<li>Hit 'Add Notif'.</li>
 <li>Increment the users score with the technique defined in 'Playing with Scores'.</li>
-<li>You shall see a notif. Hit Seen. That notif shall disappear (like in the Notification bars of Android/iOS phones)</li>
+<li>You shall see a notif. Hit Seen. That notif shall disappear (like in the notification bars of Android/iOS phones)</li>
 </ol>
 
-<h2>
-<a id="adding-more-users" class="anchor" href="#adding-more-users" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adding more users</h2>
+<h4>
+<a id="adding-more-users" class="anchor" href="#adding-more-users" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Adding more users</h4>
 
 <ol>
 <li>A default admin has been defined as <code>admin@gmail.com</code> with password as <code>admin</code>
@@ -92,12 +96,12 @@ Every system-user can create their own notifs on competitor scores and be notifi
 <li>As a user of the app, you can create more users and they can all subscribe to their own notifications.</li>
 </ol>
 
-<h2>
-<a id="checking-real-time-notifs" class="anchor" href="#checking-real-time-notifs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Checking Real Time Notifs</h2>
+<h4>
+<a id="checking-real-time-notifs" class="anchor" href="#checking-real-time-notifs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Checking Real Time Notifs</h4>
 
 <ol>
-<li>Open a Chrome browser and an incognito Chrome browser</li>
-<li>Type in the URL of the app (eg: localhost:3000) and login with different users</li>
+<li>Open one Chrome browser and one incognito Chrome browser</li>
+<li>Type in the URL of the app (eg: localhost:3000) and login with different users on both browsers</li>
 <li>Create a notif for the non-admin user. Update the scores using the admin user and you shall see a notif in the dashboard of the non-admin user.</li>
 </ol>
       </section>
