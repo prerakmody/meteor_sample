@@ -9,8 +9,8 @@ A sample leaderboard sample from meteor.js along with a few modifications of my 
 5. Type: `meteor remove insecure`
 
 ##Ref
-http://meteortips.com/first-meteor-tutorial/
-https://prerakmody.github.io/meteor_sample/
+1. http://meteortips.com/first-meteor-tutorial/
+2. https://prerakmody.github.io/meteor_sample/
 
 ##Notes
 ###Accessing Meteor's Mongo
