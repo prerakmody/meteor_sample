@@ -1,5 +1,9 @@
+//CLIENT SIDE EXECUTION
 if(Meteor.isClient){
+
+    //PUB-SUB CODE
     Meteor.subscribe('thePlayers', function(){
+ 	//creates default players at the beginning of the app
 	if (PlayersList.find().count() === 0){
             PlayersList.insert({"name" : "Prerak", "created" : Date.now(), "score" : 0})
             PlayersList.insert({"name" : "RamuKaka", "created" : Date.now(), "score" : 0})
@@ -7,6 +11,12 @@ if(Meteor.isClient){
     });
     Meteor.subscribe('theNotifs');
  
+    /***
+    Note: Meteor templates have helpers and events. Used below.
+    **/
+
+    /** --------------------------LEADERBOARD-------------------------- **/
+    //Code for Leaderboard on the left hand side of the page
     Template.leaderboard.helpers({
         'player': function(){
             return PlayersList.find({},{ sort: {score: -1} });
@@ -14,6 +24,7 @@ if(Meteor.isClient){
 	'playerCount': function(){
 	    return PlayersList.find().count()
 	},
+	//the bottom two functions are used to know which user is being selected so you are aware who you are giving/taking points from
 	'selectedClass': function(){
 	    var playerId = this._id;
     	    var selectedPlayer = Session.get('selectedPlayer');
@@ -24,10 +35,7 @@ if(Meteor.isClient){
 	'selectedPlayerDetails': function(){
 	    return Session.get('selectedPlayerDetails')
         },
-	'currentPageUser': function(){
-	    if (Meteor.users.findOne(Meteor.userId()) != undefined) 
-	        return Meteor.users.findOne(Meteor.userId())['emails'][0]['address']
-	},
+	//this is used to determine if a system-user can add players to the leaderboard
 	'isAdmin': function(){
 	    var user_obj = Meteor.users.findOne(Meteor.userId())
 	    if (user_obj != undefined){
@@ -38,6 +46,7 @@ if(Meteor.isClient){
 	} 
     });
 
+    //Code for Leaderboard on the left hand side of the page
     Template.leaderboard.events({
         'click .player': function(){
 	    var playerId = this._id;;
@@ -54,9 +63,45 @@ if(Meteor.isClient){
            PlayersList.update({ _id: selectedPlayer }, { $inc: {score: -5} });
         },
     });
-    
-   /** ---------------------------------------------------- **/
 
+       
+    Template.deleteUser.helpers({
+        'users': function(){
+            data = PlayersList.find({},{ sort: {'created': -1} }).fetch();
+            for (var i=0;  i<data.length; i++){
+                var date_obj = new Date(data[i]['created'])
+                data[i]['date'] = date_obj.getMonth() + '-' + date_obj.getDate() + ' ' + date_obj.getHours() +':'+ date_obj.getMinutes()
+            }
+            return data
+        }
+    })
+    Template.deleteUser.events({
+        'submit form': function(event){
+             event.preventDefault(); //meteor is used to create single-page apps. This stops any reloading of the page from taking place.
+             PlayersList.remove({'_id':event.target.user_id.value})
+             var notif_data = NotifsList.find({'player_id':event.target.user_id.value}).fetch()
+             for (var i=0; i< notif_data.length; i++){
+                  NotifsList.remove({'_id': notif_data[i]['_id']})
+             }
+        }
+    })
+
+    Template.addUser.events({
+        'submit form ': function(event){
+             event.preventDefault();
+             Meteor.call('createPlayer', event.target.name.value);
+             //PlayersList.insert({'name':event.target.name.value, 'created':Date.now(), 'score':0})
+        }
+    }) 
+    Meteor.methods({
+        'createPlayer': function(playerName){
+            check(playerName, String);
+            if (Meteor.userId())
+                PlayersList.insert({'name': playerName, 'created':Date.now(), 'score':0})
+        }
+    });
+
+   /** ------------------------DASHBOARD NOTIFS---------------------------- **/
    Template.createNotifs.helpers({
 	'player': function(){
             return PlayersList.find({},{ sort: {score: -1} });
@@ -66,7 +111,7 @@ if(Meteor.isClient){
         'submit form': function(event){
             event.preventDefault();
             var thresh_score = event.target.score_thres.value
-            var player_data = event.target.player_name[event.target.player_name.selectedIndex].value.split('.')
+            var player_data = event.target.player_name[event.target.player_name.selectedIndex].value.split('.') //this is dropdown-menu
             var docu = { 'thresh_score':parseInt(thresh_score), 'player_id':player_data[0], 'player_name':player_data[1],'user_id':Meteor.userId(), 'timestamp': Date.now(), 'seen':0, 'triggered':0 }
             NotifsList.insert(docu)
         }
@@ -114,45 +159,11 @@ if(Meteor.isClient){
 	}
     }) 
  
-    Template.deleteUser.helpers({
-	'users': function(){
-	    data = PlayersList.find({},{ sort: {'created': -1} }).fetch();
-	    for (var i=0;  i<data.length; i++){
-		var date_obj = new Date(data[i]['created'])
-		data[i]['date'] = date_obj.getMonth() + '-' + date_obj.getDate() + ' ' + date_obj.getHours() +':'+ date_obj.getMinutes()
-	    }
-	    return data
-	}
-    })
-    Template.deleteUser.events({
-	'submit form': function(event){
-	     event.preventDefault();
-	     PlayersList.remove({'_id':event.target.user_id.value})
-	     var notif_data = NotifsList.find({'player_id':event.target.user_id.value}).fetch()
-	     for (var i=0; i< notif_data.length; i++){
-	          NotifsList.remove({'_id': notif_data[i]['_id']})
-	     }
- 	}
-    })
-
-    Template.addUser.events({
-	'submit form ': function(event){
-	     event.preventDefault();
-	     Meteor.call('createPlayer', event.target.name.value);
-	     //PlayersList.insert({'name':event.target.name.value, 'created':Date.now(), 'score':0})
-	}
-    })
  	
 }
 
-Meteor.methods({
-    'createPlayer': function(playerName){
-	check(playerName, String);
-	if (Meteor.userId())
-	     PlayersList.insert({'name': playerName, 'created':Date.now(), 'score':0})
-    }
-});
 
+//SERVER SIDE EXECUTION
 if(Meteor.isServer){
     Meteor.publish('thePlayers', function(){
         return PlayersList.find();
@@ -163,7 +174,7 @@ if(Meteor.isServer){
 }
 
 
-
+//INITIALISING MONGO COLL HANDLERS
 PlayersList = new Mongo.Collection('players');
 NotifsList = new Mongo.Collection('notifs')
 

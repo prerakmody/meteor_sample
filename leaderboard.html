@@ -3,6 +3,8 @@
 </head>
 <body style='height:100%;'>
     <p> {{> loginButtons align="left"}} </p>
+
+    <!-- Here is the main content of the app-->
     <div style='width=100%; height:100%;'>
 	<div style='width:49%; display:inline-block; text-align:center; '>
 	    <h1>Leaderboard</h1>
@@ -18,9 +20,9 @@
 	    </div>
 	</div>
     </div>
-    <embed src="beep.wav" autostart="false" width="0" height="0" id="sound1" enablejavascript="true">
 </body>
 
+<!-- This template is for Notif showcasing-->
 <template name="informNotifs">
     {{#if getUnseenNotifs}}
          <h4> Notifs...</h4>
@@ -41,6 +43,7 @@
     {{/if}}
 </template>
 
+<!-- This template creates a notif via a form-->
 <template name="createNotifs">
     {{#if currentUser}}
         <div>
@@ -60,6 +63,7 @@
     {{/if}}
 </template>
 
+<!-- This template showcases and helps is deleting notifs-->
 <template name="deleteNotifs">
     <div>
 	{{#if getUserNotifs}}
@@ -84,7 +88,7 @@
     </div>
 </template>
 
-
+<!-- This is code for the main leaderboard on the left hand of the page-->
 <template name="leaderboard">
     {{#if currentUser}}
         <h4> Total Players: {{playerCount}}</h4>
@@ -118,6 +122,7 @@
     {{/if}}
 </template>
 
+<!-- Template to add user-->
 <template name="addUser">
 	<h5>Add User</h5> 
 	<form>
@@ -126,6 +131,7 @@
 	</form>
 </template>
 
+<!-- Template to delete user-->
 <template name="deleteUser">	
 	<h5>Delete User</h5>
 	<table>

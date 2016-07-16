@@ -1,3 +1,4 @@
+//this creates a default admin user. This admin user can add more players to the dashboard
 console.log('User Count:', Meteor.users.find().count())
 if ( Meteor.users.find().count() === 0 ) {
     Accounts.createUser({
@@ -12,5 +13,3 @@ if ( Meteor.users.find().count() === 0 ) {
     });
 }
 
-//PlayersList.insert({"name" : "Prerak", "created" : Date.now(), "score" : 0})
-//PlayersList.insert({"name" : "RamuKaka", "created" : Date.now(), "score" : 0})
