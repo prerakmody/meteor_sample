@@ -1,12 +1,12 @@
-function PlaySound(soundObj) {
-  //var sound = document.getElementById(soundObj);
-  //sound.Play();
-}
-PlaySound("sound1");
-
 if(Meteor.isClient){
-    Meteor.subscribe('thePlayers');
+    Meteor.subscribe('thePlayers', function(){
+	if (PlayersList.find().count() === 0){
+            PlayersList.insert({"name" : "Prerak", "created" : Date.now(), "score" : 0})
+            PlayersList.insert({"name" : "RamuKaka", "created" : Date.now(), "score" : 0})
+        }
+    });
     Meteor.subscribe('theNotifs');
+ 
     Template.leaderboard.helpers({
         'player': function(){
             return PlayersList.find({},{ sort: {score: -1} });
@@ -31,7 +31,7 @@ if(Meteor.isClient){
 	'isAdmin': function(){
 	    var user_obj = Meteor.users.findOne(Meteor.userId())
 	    if (user_obj != undefined){
-		if (user_obj['emails'][0]['address'] == 'prerakmody@gmail.com')
+		if (user_obj['emails'][0]['address'] == 'admin@gmail.com')
                     return true 
 	    }
 	    return false
@@ -128,18 +128,30 @@ if(Meteor.isClient){
 	'submit form': function(event){
 	     event.preventDefault();
 	     PlayersList.remove({'_id':event.target.user_id.value})
-	     NotifsList.remove({'player_id':event.target.user_id.value})
+	     var notif_data = NotifsList.find({'player_id':event.target.user_id.value}).fetch()
+	     for (var i=0; i< notif_data.length; i++){
+	          NotifsList.remove({'_id': notif_data[i]['_id']})
+	     }
  	}
     })
 
     Template.addUser.events({
 	'submit form ': function(event){
 	     event.preventDefault();
-	     PlayersList.insert({'name':event.target.name.value, 'created':Date.now(), 'score':0})
+	     Meteor.call('createPlayer', event.target.name.value);
+	     //PlayersList.insert({'name':event.target.name.value, 'created':Date.now(), 'score':0})
 	}
     })
- 
+ 	
 }
+
+Meteor.methods({
+    'createPlayer': function(playerName){
+	check(playerName, String);
+	if (Meteor.userId())
+	     PlayersList.insert({'name': playerName, 'created':Date.now(), 'score':0})
+    }
+});
 
 if(Meteor.isServer){
     Meteor.publish('thePlayers', function(){
@@ -150,5 +162,8 @@ if(Meteor.isServer){
     });
 }
 
+
+
 PlayersList = new Mongo.Collection('players');
 NotifsList = new Mongo.Collection('notifs')
+
