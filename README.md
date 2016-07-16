@@ -10,7 +10,9 @@ A sample leaderboard sample from meteor.js along with a few modifications of my 
 
 ##Ref
 http://meteortips.com/first-meteor-tutorial/
+https://prerakmody.github.io/meteor_sample/
 
+##Notes
 ###Accessing Meteor's Mongo
 Create an SSH tunnel : `ssh -L 3001:localhost:3001 username@domain`
 
